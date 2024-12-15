@@ -67,13 +67,19 @@
 
 ### 상태관리 Riverpod 
 ```
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';  // 프로바이더를 개선한 상태관리
+
+<!-- @override
+  Widget build(BuildContext context) {
+    return ProviderScope( // 최상위 위젯에 감싸줘야 됨.
+      child: MaterialApp( -->
 
 // 상태를 관리하는 Notifier
 class CounterNotifier extends StateNotifier<int> {
   CounterNotifier() : super(0);
 
   void increment() => state++;
+  // state = state + 1; 처럼 state 자체를 갱신해줘야 렌더링을 다시함. 
 }
 
 // Provider 생성
@@ -82,13 +88,23 @@ final counterProvider = StateNotifierProvider<CounterNotifier, int>((ref) {
 });
 
 // Consumer에서 상태 사용
-class MyWidget extends ConsumerWidget {
+class MyWidget extends ConsumerWidget { // stateful위젯이아니라 ConsumerWidget를 상속받음
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(counterProvider);
+  Widget build(BuildContext context, WidgetRef ref) {  //
+    final count = ref.watch(counterProvider); // 
     return Text('Count: $count');
   }
 }
+```
+
+### 앱화면의 기본틀 MaterialApp(home : Scaffold)
+```
+Scaffod(
+    appBar: AppBar(title: Text('타이틀')), // 화면 상단의 구성
+    floatingActionButton : FloatingActionButton(child : Icon(Icons.add). onPressed: (){}), // 기본적으로 우하단에 떠있다. 거의 단일 화면 앱에서나 쓸까?
+    body: Container(), // 화면 중앙 구성
+    // 이외 하단메뉴 상단메뉴 등을 구성할 수 있다. 
+);
 ```
 
 ### 저장소 

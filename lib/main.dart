@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_size/window_size.dart';
+import 'dart:io';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //Flutter 애플리케이션이 시작되기 전에 필요한 모든 시스템 및 바인딩을 초기화하는 역할을 합니다
+  if(Platform.isLinux){
+    setWindowTitle("linux Test");
+    setWindowMinSize(const Size(400, 800));
+    setWindowMaxSize(const Size(1920, 1080));
+    setWindowFrame(const Rect.fromLTWH(800, 100, 450, 800)); // 창 위치와 크기 설정
+  }
+
   runApp(const MyApp());
 }
 
@@ -10,30 +21,90 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
-        useMaterial3: true,
-        visualDensity: VisualDensity.adaptivePlatformDensity,  // 뭘 그럴싸하게 보여준다는거냐? ㅋㅋ
+    return ProviderScope( // 최상위 위젯에 감싸줘야 됨.
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+          useMaterial3: true,
+          visualDensity: VisualDensity.adaptivePlatformDensity,  // 뭘 그럴싸하게 보여준다는거냐? ㅋㅋ
+        ),
+        // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: MyWidget(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+  }
+}
+
+
+
+// 상태를 관리하는 Notifier
+class CounterNotifier extends StateNotifier<int> {
+  CounterNotifier() : super(0);
+
+  void increment() => state++;
+}
+
+// Provider 생성
+final counterProvider = StateNotifierProvider<CounterNotifier, int>((ref) {
+  return CounterNotifier();
+});
+
+// Consumer에서 상태 사용
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(counterProvider);
+    // return Text('Count: $count');
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Flutter Demo Home Page', style: TextStyle(fontFamily: 'ConsolaMono', fontWeight: FontWeight.bold),),
+      ),
+      body: SingleChildScrollView( // 세로로 확장하여 스크롤 가능하다. 
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,  
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times: 한글될껄?', style: TextStyle(fontFamily: 'ConsolaMono', color: Colors.blueAccent),
+              ),
+              Text(
+                '$count',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              Image.asset('lib/images/hanni.jpg', width: 300, fit: BoxFit.contain,), // 내장이미지에 접근하려면 pubspec.yaml 에 assets 에 등록해야함
+              // 외부이미지는 file
+              //  문자열 형태의 이미지는 memory
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+            ref.read(counterProvider.notifier).increment();
+          },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
+
+    );
+
   }
 }
 
