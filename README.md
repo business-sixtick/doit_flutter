@@ -37,6 +37,7 @@
 - ? : 삼항연산자를 지원한다. 
 - 객체앞에 _ 를 붙이면 private 로 동작한다. 
 - 널 안정성 ( null safety) 를 지원한다 . null 허용 하지 않으면 기본적으로 null 을 대입할 수 없다. 
+- https://pub.dev/    ex> flutter pub add http
 #### Dart 자료형
 - int : 정수
 - double : 실수
@@ -86,6 +87,10 @@ class CounterNotifier extends StateNotifier<int> {
 final counterProvider = StateNotifierProvider<CounterNotifier, int>((ref) {
   return CounterNotifier();
 });
+
+// 노티 없는 프로바이더
+// final sliderProvider = StateProvider<double>((ref) => 50);
+// (value)=> ref.read(sliderProvider.notifier).state = value  또는 state 대신 노티에서 제공하는 메서드를 쓸 수 도 있음.  
 
 // Consumer에서 상태 사용
 class MyWidget extends ConsumerWidget { // stateful위젯이아니라 ConsumerWidget를 상속받음

@@ -11,10 +11,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TextFieldEx extends ConsumerWidget{
   TextEditingController textEditingController = TextEditingController();
+  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ref.watch()
-
+    debugPrint('debugPrint : TextFieldEx');
     
     return Column(
       

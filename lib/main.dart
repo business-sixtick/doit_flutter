@@ -1,17 +1,20 @@
+import 'package:doit_flutter/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_size/window_size.dart';
 import 'dart:io';
 
 import 'widgets/text_field.dart';
+import 'widgets/tab_bar.dart';
+import 'widgets/list_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //Flutter 애플리케이션이 시작되기 전에 필요한 모든 시스템 및 바인딩을 초기화하는 역할을 합니다
-  if(Platform.isLinux){
-    setWindowTitle("linux Test");
+  if(Platform.isLinux | Platform.isWindows){ // Platform.localeName == ko_KR, Platform.localHostname == sixtick_sub3
+    setWindowTitle("${Platform.operatingSystem} Test"); // windows
     setWindowMinSize(const Size(400, 800));
     setWindowMaxSize(const Size(1920, 1080));
-    setWindowFrame(const Rect.fromLTWH(800, 100, 450, 800)); // 창 위치와 크기 설정
+    setWindowFrame(const Rect.fromLTWH(800, 100, 450, 900)); // 창 위치와 크기 설정
   }
 
   runApp(const MyApp());
@@ -104,7 +107,7 @@ class MyWidget extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: const Text('Home'),
+              title: const Text('text field'),
               onTap: () {
                 Navigator.pop(context); // Drawer 닫기
                 // Navigator.push(context, MaterialPageRoute(builder: (context)=> TextFieldEx()));
@@ -113,16 +116,26 @@ class MyWidget extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
+              title: const Text('tab bar'),
               onTap: () {
                 Navigator.pop(context); // Drawer 닫기
+                showModalBottomSheet(context: context, builder: (context)=> TabBarEx());
               },
             ),
             ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Logout'),
+              leading: const Icon(Icons.circle),
+              title: const Text('list view'),
               onTap: () {
                 Navigator.pop(context); // Drawer 닫기
+                showModalBottomSheet(context: context, builder: (context)=> ListViewEx());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.circle),
+              title: const Text('radio button'),
+              onTap: () {
+                Navigator.pop(context); // Drawer 닫기
+                showModalBottomSheet(context: context, builder: (context)=> RadioButtonEx());
               },
             ),
           ],
