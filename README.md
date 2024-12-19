@@ -67,6 +67,8 @@
 -  Riverpod는 Provider보다 더욱 명확하고 안전하며, 유연하고 성능이 뛰어난 상태 관리 솔루션입니다.
 
 ### 상태관리 Riverpod 
+- flutter pub add flutter_riverpod
+
 ```
 import 'package:flutter_riverpod/flutter_riverpod.dart';  // 프로바이더를 개선한 상태관리
 
@@ -111,6 +113,11 @@ Scaffod(
     // 이외 하단메뉴 상단메뉴 등을 구성할 수 있다. 
 );
 ```
+
+
+### 네트워크
+- flutter pub add http
+
 
 ### 저장소 
 ### 파이어베이스
